@@ -48,16 +48,19 @@ const Create = () => {
       let authors = '';
       let j = 0;
       let isbn_13 = 0;
-
       if (nb_livres > 0 && nb_livres < 100) {
         for (i = 0; i < nb_livres; i += 1) {
           let bookIdentifiers = data[0]['items'][i]['volumeInfo']['industryIdentifiers'] ?? [];
           let listISBN = [];
+          let found = false;
           bookIdentifiers.forEach(bookIdentifier => {
-            listISBN.push(bookIdentifier["identifier"])
+            if (bookIdentifier["identifier"].indexOf(dataBarCode) != -1) {
+              found = true
+            }
           });
+
           //couverture
-          if (data[0]['items'][i] && (listISBN.includes(dataBarCode))) {
+          if (data[0]['items'][i] && found) {
             if (data[0]['items'][i]['volumeInfo']['imageLinks']) {
               if (data[0]['items'][i]['volumeInfo']['imageLinks']['smallThumbnail']) {
                 book_g.cover = data[0]['items'][i]['volumeInfo']['imageLinks']['smallThumbnail'];
@@ -236,6 +239,7 @@ const Create = () => {
           placeholder={'Entrez la description du livre'}
           handleChangeText={(e) => setForm({ ...form, description: e })}
           otherStyles="mt-7"
+          multiline={true}
         />
         <CustomButton
           title="Enregistrer le livre"
