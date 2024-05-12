@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "mobooks",
-    "slug": "mobooks",
+    "name": "LespBooks",
+    "scheme": "lespbooks",
+    "slug": "lespbooks",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,16 +16,43 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "$(PRODUCT_NAME) a besoin d'accéder à votre caméra."
+      },
+      "bundleIdentifier": "com.groutch.lespbooks"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.groutch.lespbooks",
+      "permissions": [
+        "android.permission.CAMERA"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "$(PRODUCT_NAME) a besoin d'accéder à votre caméra.",
+          "enableCodeScanner": true
+        }
+      ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "5c08a570-3006-4328-9ac3-83e9c52f61aa"
+      }
+    },
+    "owner": "groutch"
   }
 }
