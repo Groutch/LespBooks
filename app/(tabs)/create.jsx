@@ -43,7 +43,7 @@ const Create = () => {
     loadBook(dataBarCode).then((data) => {
       data[0] = data
       let i;
-      let book_g = { id: '', title: '', isbn_13: '', cover: '', authors: '', 'description': '', publisher: '', date: 0, numberOfPages: 0, 'id_worldcat': '', 'id_google': '' };
+      let bookGoogle = { id: '', title: '', isbn_13: '', cover: '', authors: '', 'description': '', publisher: '', date: 0, numberOfPages: 0, 'id_worldcat': '', 'id_google': '' };
       let nb_livres = data[0].totalItems;
       let authors = '';
       let j = 0;
@@ -51,7 +51,6 @@ const Create = () => {
       if (nb_livres > 0 && nb_livres < 100) {
         for (i = 0; i < nb_livres; i += 1) {
           let bookIdentifiers = data[0]['items'][i]['volumeInfo']['industryIdentifiers'] ?? [];
-          let listISBN = [];
           let found = false;
           bookIdentifiers.forEach(bookIdentifier => {
             if (bookIdentifier["identifier"].indexOf(dataBarCode) != -1) {
@@ -63,15 +62,15 @@ const Create = () => {
           if (data[0]['items'][i] && found) {
             if (data[0]['items'][i]['volumeInfo']['imageLinks']) {
               if (data[0]['items'][i]['volumeInfo']['imageLinks']['smallThumbnail']) {
-                book_g.cover = data[0]['items'][i]['volumeInfo']['imageLinks']['smallThumbnail'];
+                bookGoogle.cover = data[0]['items'][i]['volumeInfo']['imageLinks']['smallThumbnail'];
               }
             }
             //Titre
             if (data[0]['items'][i]['volumeInfo']['title']) {
-              book_g.title = data[0]['items'][i]['volumeInfo']['title'];
+              bookGoogle.title = data[0]['items'][i]['volumeInfo']['title'];
             }
             if (data[0]['items'][i]['volumeInfo']['subtitle']) {
-              book_g.title += ' ' + data[0]['items'][i]['volumeInfo']['subtitle'];
+              bookGoogle.title += ' ' + data[0]['items'][i]['volumeInfo']['subtitle'];
             }
             //Auteurs
             if (data[0]['items'][i]['volumeInfo']['authors']) {
@@ -80,44 +79,50 @@ const Create = () => {
                 authors += data[0]['items'][i]['volumeInfo']['authors'][j] + ', ';
               }
               authors = authors.slice(0, -2);
-              book_g.authors = authors;
+              bookGoogle.authors = authors;
             }
             //Description
             if (data[0]['items'][i]['volumeInfo']['description']) {
-              book_g['description'] = data[0]['items'][i]['volumeInfo']['description'];
+              bookGoogle['description'] = data[0]['items'][i]['volumeInfo']['description'];
             }
             //éditeur
             if (data[0]['items'][i]['volumeInfo']['publisher']) {
-              book_g.publisher = data[0]['items'][i]['volumeInfo']['publisher'];
+              bookGoogle.publisher = data[0]['items'][i]['volumeInfo']['publisher'];
             }
             //date de parution
             if (data[0]['items'][i]['volumeInfo']['publishedDate']) {
-              book_g.date = data[0]['items'][i]['volumeInfo']['publishedDate'];
+              bookGoogle.date = data[0]['items'][i]['volumeInfo']['publishedDate'];
             }
             //nb de pages
             if (data[0]['items'][i]['volumeInfo']['pageCount']) {
-              book_g.numberOfPages = data[0]['items'][i]['volumeInfo']['pageCount'];
+              bookGoogle.numberOfPages = data[0]['items'][i]['volumeInfo']['pageCount'];
             }
             //ISBN
             if (data[0]['items'][i]['volumeInfo']['industryIdentifiers']) {
               for (j = 0; j < data[0]['items'][i]['volumeInfo']['industryIdentifiers'].length; j += 1) {
-                if (data[0]['items'][i]['volumeInfo']['industryIdentifiers'][j]["type"] === 'ISBN_13') { isbn_13 = data[0]['items'][i]['volumeInfo']['industryIdentifiers'][j]['identifier']; }
+                if (data[0]['items'][i]['volumeInfo']['industryIdentifiers'][j]["type"] === 'ISBN_13') {
+                  isbn_13 = data[0]['items'][i]['volumeInfo']['industryIdentifiers'][j]['identifier'];
+                }
               }
               if (isbn_13 !== 0) {
-                book_g.isbn_13 = isbn_13;
+                bookGoogle.isbn_13 = isbn_13;
               }
             }
           }
-          book_g.url = 'https://www.googleapis.com/books/v1/volumes?q=' + 'isbn:' + dataBarCode;
         }
       }
       // compilation resultat : 
       setForm({
-        title: book_g.title,
-        author: book_g.authors,
-        thumbnail: null,
-        description: book_g.description,
-        isbn: book_g.isbn_13,
+        title: bookGoogle.title,
+        author: bookGoogle.authors,
+        thumbnail: {
+          fileName: dataBarCode + '.jpeg',
+          mimeType: 'image/jpeg',
+          fileSize: 1660579,
+          uri: bookGoogle.cover
+        },
+        description: bookGoogle.description,
+        isbn: bookGoogle.isbn_13,
         genre: '',
       })
       // book_g.isbn_13;
