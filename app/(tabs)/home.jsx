@@ -14,14 +14,15 @@ import { useGlobalContext } from '../../context/GlobalProvider'
 const Home = () => {
 
   const { user } = useGlobalContext();
-  const { data: books, refetch } = useAppwrite(getAllBooks)
-  const { data: latestBooks } = useAppwrite(getLatestBooks);
+  const { data: books, refetch: refetchAll } = useAppwrite(getAllBooks)
+  const { data: latestBooks, refetch: refetchLatest } = useAppwrite(getLatestBooks);
 
   const [refreshing, setRefreshing] = useState(false)
 
   const onRefresh = async () => {
     setRefreshing(true)
-    await refetch()
+    await refetchAll()
+    await refetchLatest()
     setRefreshing(false)
   }
 
@@ -66,7 +67,7 @@ const Home = () => {
         ListEmptyComponent={() => (
           <EmptyState
             title="C'est bien vide ici"
-            subtitle="Aucun livre créé"
+            subtitle="Aucun livre trouvé"
           />
         )}
         refreshControl={<RefreshControl
