@@ -19,7 +19,7 @@ const Search = () => {
   }, [query])
 
   return (
-    <SafeAreaView className='bg-primary'>
+    <SafeAreaView className='bg-primary h-full'>
       <FlatList
         data={books ?? []}
         keyExtractor={(item) => item.$id}
