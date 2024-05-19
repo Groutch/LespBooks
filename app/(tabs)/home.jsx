@@ -6,12 +6,16 @@ import { images } from '../../constants';
 import SearchInput from '../../components/SearchInput';
 import Trending from '../../components/Trending';
 import EmptyState from '../../components/EmptyState';
-import { getAllBooks } from '../../lib/appwrite';
+import { getAllBooks, getLatestBooks } from '../../lib/appwrite';
 import useAppwrite from '../../lib/useAppwrite';
 import BookCard from '../../components/BookCard';
+import { useGlobalContext } from '../../context/GlobalProvider'
 
 const Home = () => {
+
+  const { user } = useGlobalContext();
   const { data: books, refetch } = useAppwrite(getAllBooks)
+  const { data: latestBooks } = useAppwrite(getLatestBooks);
 
   const [refreshing, setRefreshing] = useState(false)
 
@@ -37,7 +41,7 @@ const Home = () => {
                   Salut
                 </Text>
                 <Text className='text-2xl font-psemibold text-white'>
-                  Groutch
+                  {user.username}
                 </Text>
               </View>
               <View className='mt-1.5'>
@@ -54,7 +58,7 @@ const Home = () => {
                 Derniers Livres
               </Text>
               <Trending
-                posts={books ?? []}
+                posts={latestBooks ?? []}
               />
             </View>
           </View>
