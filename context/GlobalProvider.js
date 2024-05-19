@@ -20,7 +20,7 @@ export const GlobalProvider = ({ children }) => {
         }
       })
       .catch(error => {
-        console.log(error)
+        console.log('Global error : ' + error)
       })
       .finally(() => {
         setIsLoading(false)
