@@ -117,13 +117,13 @@ const Create = () => {
         author: bookGoogle.authors,
         thumbnail: (
           bookGoogle.cover !== ''
-          ? {
-            fileName: dataBarCode + '.jpeg',
-            mimeType: 'image/jpeg',
-            fileSize: 2000000,
-            uri: bookGoogle.cover
-          }
-          : null
+            ? {
+              fileName: dataBarCode + '.jpeg',
+              mimeType: 'image/jpeg',
+              fileSize: 2000000,
+              uri: bookGoogle.cover
+            }
+            : null
         ),
         description: bookGoogle.description,
         isbn: bookGoogle.isbn_13,
@@ -135,25 +135,26 @@ const Create = () => {
   }
 
   const openPicker = async (selectType) => {
-    // const result = await ImagePicker.launchImageLibraryAsync(
-    //   {
-    //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //     allowsEditing: true,
-    //     quality: 1,
-    //   }
-    // )
-    const result = await ImagePicker.launchCameraAsync(
+    const result = await ImagePicker.launchImageLibraryAsync(
       {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
-        quality: 1
+        quality: 1,
       }
     )
+    // TODO : voir si on peut avoir la galerie ET la camera en meme temps
+
+    // const result = await ImagePicker.launchCameraAsync(
+    //   {
+    //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //     allowsEditing: true,
+    //     quality: 1
+    //   }
+    // )
     if (selectType === "image" && !result.canceled) {
       setForm({ ...form, thumbnail: result.assets[0] })
     }
   }
-
 
   const submit = async () => {
     if (!form.title || !form.author || !form.description) {
@@ -168,7 +169,7 @@ const Create = () => {
       Alert.alert('Succes', 'Livre uploadé avec succés')
       router.push('/home')
     } catch (error) {
-      Alert.alert("ErreurEUR : ", error.message)
+      Alert.alert("Erreur", error.message)
     } finally {
       setForm({
         title: '',
