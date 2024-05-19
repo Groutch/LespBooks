@@ -115,39 +115,41 @@ const Create = () => {
       setForm({
         title: bookGoogle.title,
         author: bookGoogle.authors,
-        thumbnail: {
-          fileName: dataBarCode + '.jpeg',
-          mimeType: 'image/jpeg',
-          fileSize: 1660579,
-          uri: bookGoogle.cover
-        },
+        thumbnail: (
+          bookGoogle.cover !== ''
+          ? {
+            fileName: dataBarCode + '.jpeg',
+            mimeType: 'image/jpeg',
+            fileSize: 2000000,
+            uri: bookGoogle.cover
+          }
+          : null
+        ),
         description: bookGoogle.description,
         isbn: bookGoogle.isbn_13,
         genre: '',
       })
-      // book_g.isbn_13;
-      // book_g.id_google;
-      // book_g.cover;
-      // book_g.numberOfPages;
-      // book_g.description;
-      // book_g.date;
-      // book_g.publisher;
-      // book_g.authors;
-      // book_g.title;
     });
     setScanned(true);
 
   }
 
   const openPicker = async (selectType) => {
-    const result = await ImagePicker.launchImageLibraryAsync(
+    // const result = await ImagePicker.launchImageLibraryAsync(
+    //   {
+    //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //     allowsEditing: true,
+    //     quality: 1,
+    //   }
+    // )
+    const result = await ImagePicker.launchCameraAsync(
       {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         quality: 1
       }
     )
-    if (selectType === "image") {
+    if (selectType === "image" && !result.canceled) {
       setForm({ ...form, thumbnail: result.assets[0] })
     }
   }
